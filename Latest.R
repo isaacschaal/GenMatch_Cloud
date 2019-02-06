@@ -1,4 +1,3 @@
-#extractDataFromGenoud <- function(x, balancematrix, pop, y, treatment, df){
 extractDataFromGenoud <- function(X, BalanceMatrix, Y, Tr, df, cl, balance_formul, pop){
   
   # Create temp directory for the genoud.pro
@@ -59,9 +58,11 @@ extractDataFromGenoud <- function(X, BalanceMatrix, Y, Tr, df, cl, balance_formu
   # create a new dataframe
   # The first col will be the lowest p val, the last col will be the treatment effect
   # and the middle cols will be the weights of the weight matrix
-  cols = ncol(BalanceMatrix)
-  df <- matrix(data = NA, ncol = cols+1, nrow = length(outputlist))
+  cols = ncol(X)
+  df <- matrix(data = NA, ncol = cols+2, nrow = length(outputlist)) # changed
   #This was updated (ncol should be 1 more than cols)
+  end <- length(outputlist[[1]])
+  start <- end - cols+1
   
   for(candidate in c(1:length(outputlist))){
     
@@ -70,19 +71,21 @@ extractDataFromGenoud <- function(X, BalanceMatrix, Y, Tr, df, cl, balance_formu
     # 23rd is the 1st of weights, till 32
     
     # Get the lowest p val and the weight matrix
-    selected <- outputlist[[candidate]][c(2,(cols*2+2):(cols*2+ncol(X)+1))]
+    
+    selected <- outputlist[[candidate]][c(2,start:end)]
     
     # Convert them to numeric
     selection <- as.numeric(selected)
     
     # set the first 11 to what we have selected
-    df[candidate,c(1:cols)] <- selection
+    for_sel = cols +1
+    df[candidate,c(1:for_sel)] <- selection
   }
   
   for(i in c(1:nrow(df))){
     # matching using the weight matrix
     # diag makes the list turn into diag of matrix
-    mout <- Match(Y=Y, Tr=Tr, X=X, estimand="ATT", Weight.matrix=diag(df[i,c(2:(ncol(df)-1))]))
+    mout <- Match(Y=Y, Tr=Tr, X=X, estimand="ATT", Weight.matrix=diag(df[i,c(2:(ncol(df)-1))])) # its here i think
     # changed the y and x and treat
     ### CHANGE TO have the correct inputs
     
