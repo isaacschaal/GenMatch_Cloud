@@ -42,7 +42,7 @@ extractDataFromGenoud <- function(X, BalanceMatrix, Y, Tr, df, cl, balance_formu
   summary(mout)
   
   mb <- MatchBalance(balance_formul,
-                     match.out=mout, nboots=500, ksboot = 0)
+                     match.out=mout, nboots=500)
   
   # Overwrite the previous genoud, write the full output of genout
   # also, is taking genoud.pro and turning to genoud.txt
