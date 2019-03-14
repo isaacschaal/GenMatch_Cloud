@@ -1,10 +1,16 @@
-# Imports
+# Installing Packages and Imports
+
+install.packages('Matching')
+install.packages('foreign')
+install.packages('rgenoud')
+
 library(Matching)
 library(foreign)
 library(rbounds)
 library(dplyr)
 library(haven)
 library(parallel)
+library(rgenoud)
 
 #####
 
@@ -26,14 +32,11 @@ extractDataFromGenoud <- function(X, BalanceMatrix, Y, Tr, df, cl, balance_formu
   
   # Do genout, mout and mb for one set
   genout <- GenMatch(Tr=Tr, X=X, BalanceMatrix=BalanceMatrix, estimand="ATT", M=1,
-                     pop.size=50, max.generations=10, wait.generations=5, cluster = cl, print.level = 3,
-                     project.path = cat(temp,"genoud.pro"))
+                     pop.size=100, max.generations=20, wait.generations=5, cluster = cl, print.level = 3,
+                     project.path = cat(temp,"genoud.pro"), nboots = 500)
         # print level >3 means it prints all gens, and file is made
         # path is the temp dir where genoud.pro goes
   
-  # genout <- GenMatch(Tr=Tr, X=X, BalanceMatrix = BalanceMatrix,
-  #                    estimand="ATT",
-  #                    pop.size=10, max.generations=10, wait.generations=5, cluster = cl)
   
   mout <- Match(Y=Y, Tr=Tr, X=X, estimand="ATT", Weight.matrix=genout)
   summary(mout)
