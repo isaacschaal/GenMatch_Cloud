@@ -30,14 +30,15 @@ library(rgenoud)
 
 #####
 
-extractDataFromGenoud <- function(X, BalanceMatrix, Y, Tr, df, cl, balance_formul, pop){
+extractDataFromGenoud <- function(X, BalanceMatrix, Y, Tr, df, cl, balance_formul, pop = 100,
+                                  max.gen = 25 , wait.gen = 10){
   
   # Create temp directory for the genoud.pro
   temp <- toString(tempdir())
   
   # Do genout, mout and mb for one set
   genout <- GenMatch(Tr=Tr, X=X, BalanceMatrix=BalanceMatrix, estimand="ATT", M=1,
-                     pop.size=25, max.generations=10, wait.generations=5, cluster = cl, print.level = 3,
+                     pop.size=pop, max.generations= max.gen, wait.generations= wait.gen, cluster = cl, print.level = 3,
                      project.path = cat(temp,"genoud.pro"), nboots = 500)
   # print level >3 means it prints all gens, and file is made
   # path is the temp dir where genoud.pro goes
