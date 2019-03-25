@@ -1,8 +1,14 @@
 # Installing Packages and Imports
 
+# Install the packages you dont have,
+# on a server it might take a while
+
+## TODO - write terminal code to install
+## the packages on the server on startup
 install.packages('Matching')
 install.packages('foreign')
 install.packages('rgenoud')
+
 
 library(Matching)
 library(foreign)
